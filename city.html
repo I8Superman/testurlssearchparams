@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+</head>
+
+<body>
+  <main></main>
+
+  <template>
+
+    <a href="">
+      <article>
+        <h1></h1>
+      </article>
+    </a>
+  </template>
+  <script>
+    let params = new URLSearchParams(document.location.search.substring(1));
+    let cityFromUrl = params.get("city");
+
+
+
+
+
+    fetch(
+        "https://spreadsheets.google.com/feeds/list/18QShemZlLoq2j6zasY3bNjFkoqkDb_tP7Tpjujma3mg/od6/public/values?alt=json"
+      ).then(res => res.json())
+      .then(showCities)
+
+    function showCities(data) {
+      console.log(data)
+      data.feed.entry.forEach(city => {
+        if (city.gsx$city.$t == cityFromUrl) {
+          const template = document.querySelector("template").content;
+          const copy = template.cloneNode(true);
+          copy.querySelector("h1").textContent = city.gsx$city.$t;
+          copy.querySelector("a").href = `city.html?city=${city.gsx$city.$t}`
+          document.querySelector("main").appendChild(copy)
+        }
+      })
+
+    }
+  </script>
+</body></html>
